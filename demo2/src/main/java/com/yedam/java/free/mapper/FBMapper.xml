@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.java.free.mapper.FBMapper">
+	<!-- 입력될 게시글 번호 조회 -->
+	<select id="getBoardNo" resultType="FBVO">
+		SELECT NVL(MAX(BNO),0)+1 AS
+		BNO
+		FROM BOARD
+	</select>
+
+	<!-- 전체조회 -->
+	<select id="getBoardList" resultType="FBVO">
+		SELECT *
+		FROM BOARD
+		ORDER BY
+		BNO
+	</select>
+
+	<!-- 단건조회 -->
+	<select id="selectBoard" resultType="FBVO" parameterType="FBVO">
+		SELECT bno,
+		title,
+		contents,
+		writer,
+		regdate,
+		updatedate,
+		image
+		FROM BOARD
+		<where>
+			<if test="writer != null and !writer.equals ('')">
+				WRITER = #{writer}
+			</if>
+			<if test="bno > 0">
+				AND BNO = #{bno}
+			</if>
+		</where>
+	</select>
+
+	<!-- 게시글 등록 -->
+	<insert id="insertBoard" parameterType="FBVO">
+		INSERT INTO BOARD (
+		BNO,
+		TITLE,
+		CONTENTS,
+		WRITER,
+		<if test="regdate != null">
+			REGDATE,
+		</if>
+		UPDATEDATE,
+		<if test="image != null">
+			IMAGE
+		</if>
+		)
+
+		VALUES ( #{bno},
+		#{title},
+		#{contents},
+		#{writer},
+		<if test="regdate != null">
+			#{regdate},
+		</if>
+		#{updatedate},
+		<if test="image != null">
+			#{image}
+		</if>
+		)
+	</insert>
+
+	<!-- 게시글 수정 -->
+	<update id="updateBoard" parameterType="FBVO">
+		UPDATE BOARD
+		<set>
+			<if test="title != null and !title.equals('')">
+				TITLE = #{title},
+			</if>
+			<if test="contents != null and !contents.equals('')">
+				CONTENTS = #{contents},
+			</if>
+			<if test="image != null and !image.equals('')">
+				IMAGE = #{image},
+			</if>
+			<if test="updatedate != null">
+				UPDATEDATE = #{updatedate}
+			</if>
+			<if test="updatedate == null">
+				UPDATEDATE = SYSDATE
+			</if>
+		</set>
+		WHERE BNO = #{bno}
+	</update>
+	<!-- 게시글 삭제 -->
+	<delete id="deleteBoard" parameterType="FBVO">
+		DELETE FROM BOARD
+		WHERE BNO = #{bno}
+	</delete>
+</mapper>

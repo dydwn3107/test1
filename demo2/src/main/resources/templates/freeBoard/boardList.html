@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	[[${boardList[0].title}]]
+	[[${request.contextPath}]]
+	<table border="1">
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>번호</th>
+				<th>제목</th>
+				<th>작성자</th>
+				<th>작성일</th>
+				<th>if</th>
+			</tr>
+		</thead>
+		<tbody>
+			<th:block th:each=" board : ${boardList}">
+				<tr>
+					<td th:utext="${boardStat.count}">1</td>
+					<td th:text="${board.bno}">101</td>
+					<td th:text="${board.title}">제목입니다.</td>
+					<td th:text="${board.writer}">작성자</td>
+					<td th:text="${#dates.format({board.regdate},'yy/MM/dd')}">2022-01-01</td>
+					<td th:if="${boardStat.count} == 1" th:text="첫번째"></td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+</body>
+</html>
